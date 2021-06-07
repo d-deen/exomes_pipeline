@@ -35,7 +35,7 @@ cd $In
 
 if ls $In/*R1.fastq.gz 2> /dev/null
 then
-    cp $In/*R1.fastq.gz ${Out}/${Job}_rawfiles
+    cp *.fastq.gz ${Out}/${Job}_rawfiles
     echo 'No concatentation needed, files are ending in R*.fastq.gz'
 else 
     echo "Concatenation required"
