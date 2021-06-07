@@ -35,8 +35,8 @@ cd $In
 
 if ls $In/*R1.fastq.gz 2> /dev/null
 then
+    cp $In/*R1.fastq.gz ${Out}/${Job}_rawfiles
     echo 'No concatentation needed, files are ending in R*.fastq.gz'
-    cp $In/*fastq.gz ${Out}/${Job}_rawfiles
 else 
     echo "Concatenation required"
     ls -1 *R*_001.fastq.gz | sed 's/_L[0-9]*_R[1-2]_001.fastq.gz//' | uniq > ${Out}/${Job}_rawfiles/fastq_combine.txt
