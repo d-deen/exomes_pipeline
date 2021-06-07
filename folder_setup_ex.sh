@@ -74,6 +74,3 @@ sort ${Out}/samples.txt | uniq > ${Out}/samplesheet.txt
 rm ${Out}/samples.txt
 
 echo "Sample sheet generation is done"
-
-
-##test
