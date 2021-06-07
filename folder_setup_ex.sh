@@ -33,8 +33,9 @@ echo "Setup of the folders is done"
 ##Sample concatenation; assumes that if the files are ending in _L*_R[1-2]_001.fastq.gz, then concatenation is required, if the ending is "*_R[1-2].fastq.gz", then concatenation is not reqiored
 cd $In
 
-if ls $In/*R1.fastq.gz 2> /dev/null
-then
+PATTERN=(*R1.fastq.gz)
+
+if [ -f ${PATTERN[0]} ]; then 
     cp *.fastq.gz ${Out}/${Job}_rawfiles
     echo 'No concatentation needed, files are ending in R*.fastq.gz'
 else 
