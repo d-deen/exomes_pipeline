@@ -98,6 +98,10 @@ combined=pd.concat([df_A]+new_cols,axis=1)
 combined=combined.loc[ ~(combined['gnomAD_AF'] >= 0.05)]
 combined['gnomAD_AF']=combined['gnomAD_AF'].fillna('.')
 
+
+combined=combined.loc[(combined['In_MitoCarta3'] == True )]
+combined=combined.loc[(combined['Consequence'].notna())]
+
 #Remove the consequences we are not interested in
 combined=combined.loc[~(combined['Consequence']=='intron_variant')]
 combined=combined.loc[~(combined['Consequence']=='upstream_gene_variant')]
@@ -109,8 +113,6 @@ combined=combined.loc[~(combined['Consequence']=='synonymous_variant')]
 combined=combined.loc[~(combined['Consequence']=='non_coding_transcript_variant')]
 combined=combined.loc[~(combined['Consequence']=='intron_variant&non_coding_transcript_variant')]
 combined=combined.loc[~(combined['Consequence']=='non_coding_transcript_exon_variant')]
-
-
 
 
 #Write the output file into output directory  
