@@ -79,7 +79,11 @@ def get_outcome(s):
         return 'HET' 
     elif '1/1'  in s:
         return 'HOM'
+    elif '1|1'  in s:
+        return 'HOM'
     elif '0/0' in s:
+        return 'REF'
+    elif '0|0' in s:
         return 'REF'
     else:
         return 'unknown'
