@@ -53,7 +53,8 @@ ${vep_path}/vep --cache --dir $dir \
 --plugin LoFtool \
 --plugin DisGeNET,file=/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD/ensembl-vep/Plugins/all_variant_disease_pmid_associations_final.tsv.gz,disease=1 \
 --plugin REVEL,/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD/ensembl-vep/Plugins/new_tabbed_revel_grch38.tsv.gz \
---fields "Gene,Feature,SYMBOL,Existing_variation,VARIANT_CLASS,Consequence,cDNA_position,CDS_position,Protein_position,Amino_acids,HGVSc,HGVSp,BIOTYPE,IMPACT,CLIN_SIG,PolyPhen,SIFT,CADD_PHRED,CADD_RAW,MutationTaster_pred,REVEL,gnomAD_AF,MAX_AF,ExACpLI,LoFtool,DisGeNET_PMID,DisGeNET_SCORE,DisGeNET_disease" \
+--plugin Mastermind,/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD/ensembl-vep/Plugins/mastermind_cited_variants_reference-2021.04.02-grch38.vcf.gz,0,0,1 \
+--fields "Gene,Feature,SYMBOL,Existing_variation,VARIANT_CLASS,Consequence,cDNA_position,CDS_position,Protein_position,Amino_acids,HGVSc,HGVSp,BIOTYPE,IMPACT,CLIN_SIG,PolyPhen,SIFT,CADD_PHRED,CADD_RAW,MutationTaster_pred,REVEL,gnomAD_AF,MAX_AF,ExACpLI,LoFtool,DisGeNET_PMID,DisGeNET_SCORE,DisGeNET_disease,Mastermind_URL" \
 --pick \
 --pick_order rank,canonical,tsl \
 --buffer_size 20000 \
@@ -101,7 +102,8 @@ do
     --plugin LoFtool \
     --plugin DisGeNET,file=/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD/ensembl-vep/Plugins/all_variant_disease_pmid_associations_final.tsv.gz,disease=1 \
     --plugin REVEL,/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD/ensembl-vep/Plugins/new_tabbed_revel_grch38.tsv.gz \
-    --fields "Gene,Feature,SYMBOL,Existing_variation,VARIANT_CLASS,Consequence,cDNA_position,CDS_position,Protein_position,Amino_acids,HGVSc,HGVSp,BIOTYPE,IMPACT,CLIN_SIG,PolyPhen,SIFT,CADD_PHRED,CADD_RAW,MutationTaster_pred,REVEL,gnomAD_AF,MAX_AF,ExACpLI,LoFtool,DisGeNET_PMID,DisGeNET_SCORE,DisGeNET_disease" \
+    --plugin Mastermind,/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD/ensembl-vep/Plugins/mastermind_cited_variants_reference-2021.04.02-grch38.vcf.gz,0,0,1 \
+    --fields "Gene,Feature,SYMBOL,Existing_variation,VARIANT_CLASS,Consequence,cDNA_position,CDS_position,Protein_position,Amino_acids,HGVSc,HGVSp,BIOTYPE,IMPACT,CLIN_SIG,PolyPhen,SIFT,CADD_PHRED,CADD_RAW,MutationTaster_pred,REVEL,gnomAD_AF,MAX_AF,ExACpLI,LoFtool,DisGeNET_PMID,DisGeNET_SCORE,DisGeNET_disease,Mastermind_URL" \
     --pick \
     --pick_order rank,canonical,tsl \
     --buffer_size 20000 \

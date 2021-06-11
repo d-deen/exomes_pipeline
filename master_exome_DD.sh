@@ -9,7 +9,7 @@ Out=$2
 Job=$3
 
 
-script_path="/mnt/nfs/home/ndd73/exome_pipeline"
+script_path="/mnt/nfs/home/ndd73/exomes_pipeline/exomes_pipeline"
 
 
 JobID1="Set_up_folder and copy/concatenate files"

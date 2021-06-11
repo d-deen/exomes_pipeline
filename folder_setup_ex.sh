@@ -41,7 +41,6 @@ if [ -f ${PATTERN[0]} ]; then
 else 
     echo "Concatenation required"
     ls -1 *R*_001.fastq.gz | sed 's/_L[0-9]*_R[1-2]_001.fastq.gz//' | uniq > ${Out}/${Job}_rawfiles/fastq_combine.txt
-
     samplesheet=${Out}/${Job}_rawfiles/fastq_combine.txt
     END=$(wc -l < ${samplesheet})
 
@@ -53,9 +52,7 @@ else
     done
 
     rm ${Out}/${Job}_rawfiles/fastq_combine.txt
-
     echo "The fastq files are concatenated and copied to the working directory"
-
 fi
 
 
