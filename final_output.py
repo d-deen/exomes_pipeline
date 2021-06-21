@@ -45,7 +45,7 @@ df_B=in_df[in_df.columns[9:]]
 #Parsing the VEP annotation
 
 df_A[['INFO','VEP']]=in_df['INFO'].str.split('CSQ=', expand=True)
-df_A[['Gene','SYMBOL','Existing_variation','VARIANT_CLASS','Consequence','cDNA_position','CDS_position','Protein_position','Amino_acids','HGVSc','HGVSp','BIOTYPE','IMPACT','CLIN_SIG','PolyPhen','SIFT','CADD_PHRED','CADD_RAW','MutationTaster_pred','REVEL','gnomAD_AF','MAX_AF','ExACpLI','LoFtool','DisGeNET_PMID','DisGeNET_SCORE','DisGeNET_disease','Mastermind_URL']]=df_A['VEP'].str.split('|',expand=True)
+df_A[['Gene','Feature','SYMBOL','Existing_variation','VARIANT_CLASS','Consequence','cDNA_position','CDS_position','Protein_position','Amino_acids','HGVSc','HGVSp','BIOTYPE','IMPACT','CLIN_SIG','PolyPhen','SIFT','CADD_PHRED','CADD_RAW','MutationTaster_pred','REVEL','gnomAD_AF','MAX_AF','ExACpLI','LoFtool','DisGeNET_PMID','DisGeNET_SCORE','DisGeNET_disease','Mastermind_URL']]=df_A['VEP'].str.split('|',expand=True)
 
 
 #Making gnomAD frequencies numeric to filter on them
