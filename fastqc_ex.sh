@@ -22,7 +22,7 @@ fastq_folder=${Out}/${Job}_results/${Job}_fastqc
 sample=`sed -n "$SLURM_ARRAY_TASK_ID"p $sample_list |  awk '{print $1}'` 
 
 ##Run fastqc
-fastqc ${sample} --outdir=${fastq_folder} 2>> ${Out}/${Job}_logs/${Job}_${name}_fastqc.log
+fastqc -t 8 ${sample} --outdir=${fastq_folder} 2>> ${Out}/${Job}_logs/${Job}_${name}_fastqc.log
 
 echo "Fastqc analysis done"
 

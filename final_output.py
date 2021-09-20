@@ -18,8 +18,14 @@ OMIMdisease='/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/custom_ann_DD/Gene_OMIM_
 vcf_output=glob.glob(os.path.join(args.vcf_path,'*_filtered_cohort_annotated.vcf'))
 csv_name_comments=args.job+'_descr_annotated.csv'
 csv_name_annot=args.job+'_annotated.csv'
+csv_name_annot_clinvar=args.job+'_clinvar_annotated.csv'
+csv_name_annot_morbid=args.job+'_morbid_annotated.csv'
+
 csv_output_comments=os.path.join(args.output_path,csv_name_comments)
 csv_output_annot=os.path.join(args.output_path,csv_name_annot)
+csv_output_annot_clinvar=os.path.join(args.output_path,csv_name_annot_clinvar)
+csv_output_annot_morbid=os.path.join(args.output_path,csv_name_annot_morbid)
+
 
 with open(vcf_output[0],'r') as f:
     lines = f.readlines()
@@ -97,16 +103,21 @@ for col in flexcols:
     
 
 ##Final pivoting of the files:
-#remove the variants with frequencies higher than 0.05, replace the empty cells with '.'
+
 combined=pd.concat([df_A]+new_cols,axis=1)
+
+#Getting the pathogenic variants as defined by ClinVAr: 
+combined2=combined.loc[(combined['CLIN_SIG']=='pathogenic')]
+
+#remove the variants with frequencies higher than 0.05, replace the empty cells with '.'
 combined=combined.loc[ ~(combined['gnomAD_AF'] >= 0.05)]
 combined['gnomAD_AF']=combined['gnomAD_AF'].fillna('.')
 
-
-combined=combined.loc[(combined['In_MitoCarta3'] == True )]
+#Remove variants without defined consequences
 combined=combined.loc[(combined['Consequence'].notna())]
 
 #Remove the consequences we are not interested in
+
 combined=combined.loc[~(combined['Consequence']=='intron_variant')]
 combined=combined.loc[~(combined['Consequence']=='upstream_gene_variant')]
 combined=combined.loc[~(combined['Consequence']=='downstream_gene_variant')]
@@ -119,11 +130,29 @@ combined=combined.loc[~(combined['Consequence']=='intron_variant&non_coding_tran
 combined=combined.loc[~(combined['Consequence']=='non_coding_transcript_exon_variant')]
 
 
+#Variants in morbid genes (excluding mitocarta)
+combined3=combined.loc[(combined['In_MitoCarta3'] == False )]
+combined3['MIM Number'].replace('', np.nan, inplace=True)
+combined3.dropna(subset=['MIM Number'], inplace=True)
+
+
+#Leave variants in Mitocarta genes
+combined=combined.loc[(combined['In_MitoCarta3'] == True )]
+
+
+
 #Write the output file into output directory  
 with open(csv_output_comments, 'w') as f:
     f.writelines(comments)
 
 with open(csv_output_annot, 'w') as f:
     combined.to_csv(f, index=False)
+
+
+with open(csv_output_annot_clinvar, 'w') as f:
+    combined2.to_csv(f, index=False)
+
+with open(csv_output_annot_morbid, 'w') as f:
+    combined3.to_csv(f, index=False)
 
 
