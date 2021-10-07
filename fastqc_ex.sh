@@ -2,6 +2,7 @@
 #SBATCH -A rtmngs
 #SBATCH -p bigmem
 #SBATCH --mem=50G
+#SBATCH -c 4
 
 #Arguments from the command line input by user 
 Out=$1
@@ -22,12 +23,12 @@ fastq_folder=${Out}/${Job}_results/${Job}_fastqc
 sample=`sed -n "$SLURM_ARRAY_TASK_ID"p $sample_list |  awk '{print $1}'` 
 
 ##Run fastqc
-fastqc -t 8 ${sample} --outdir=${fastq_folder} 2>> ${Out}/${Job}_logs/${Job}_${name}_fastqc.log
+fastqc -t 4 ${sample} --outdir=${fastq_folder} 2>> ${Out}/${Job}_logs/${Job}_${name}_fastqc.log
 
 echo "Fastqc analysis done"
 
 ##Run fastq_screen
 ${fastq_path}/fastq_screen ${sample} --aligner bowtie2 --force \
---threads 8 --outdir ${fastq_folder} 2>> ${Out}/${Job}_logs/${Job}_fastq_screen.log
+--threads 4 --outdir ${fastq_folder} 2>> ${Out}/${Job}_logs/${Job}_fastq_screen.log
 
 echo "Fastq_screen analysis done"

@@ -50,10 +50,8 @@ df_A[['Gene','Feature','SYMBOL','Existing_variation','VARIANT_CLASS','Consequenc
 df_A['gnomAD_AF']=df_A['gnomAD_AF'].replace(r'\s+',np.nan,regex=True).replace('','.')
 
 
-#Adding OMIM ID annotation
 
-
-#Assigning Hom and Het to the samples  
+#Separating heteroplasmy levels of the variants  
 
 flexcols = df_B.columns.tolist()
 new_cols = []

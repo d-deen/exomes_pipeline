@@ -23,14 +23,8 @@ JobID8='Mito SNPs'
 JobID9='Annotate mito'
 
 
-#job1=$(srun --job-name="${JobID1}" ${script_path}/folder_setup_ex.sh "${In}" "${Out}" "${Job}" )
-
 srun --job-name="${JobID1}" ${script_path}/folder_setup_ex.sh "${In}" "${Out}" "${Job}" 
 
-#echo "setting up folder system"
-#sleep 2
-#echo ${job1}
-#j1=${job1}
 
 wait
 

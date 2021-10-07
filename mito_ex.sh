@@ -8,11 +8,12 @@
 Out=$1
 Job=$2
 
+##Module loading
 module load Java/11.0.2
 module load BCFtools/1.10.2-foss-2019b
 module load SAMtools/1.12-GCC-10.2.0 
 
-
+##Setting constants for mitochondrial variant calling:
 mutserve_path=/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD
 haplogrep_path=/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD
 haplocheck_path=/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD
@@ -25,6 +26,7 @@ chrM="chrM"
 
 cd ${Out}/${Job}_results/${Job}_bam
 
+##Calculating the depth of sequencing on chrM
 samtools depth -a -r ${mito_size} -H -q 30  -d 0 -G UNMAP -G SECONDARY -G QCFAIL -G DUP \
 --reference  ${fasta_ref}  \
 -o ${Out}/${Job}_report/mito/${Job}_mito_coverage.csv \
@@ -46,6 +48,8 @@ echo -e "Sample_Name\trName\tstartpos\tendpos\tnumreads\tcoveredbases\tcoverage\
  > ${Out}/${Job}_report/mito/${Job}_mito_coverage_stats.txt
 
 
+#SNP variant calling
+
 ${mutserve_path}/mutserve call --reference ${mito_ref} \
 --level 0.01 --baseQ=30 --write-raw \
 --output ${Out}/${Job}_results/${Job}_vcf/${Job}_mutserve.vcf \
@@ -53,7 +57,7 @@ $(ls ${Out}/${Job}_results/${Job}_bam/*bwa_dedup.bam)
 
 
 
-    #Indel calling
+#Indel calling
 bcftools mpileup -C 50 -d 20000 -f ${fasta_ref} --threads 4 -L 20000 -m 10 -O z \
 -Q 30 -r ${chrM} --per-sample-mF -F 0.1  -b ${bam_list} -o ${Out}/${Job}_results/${Job}_vcf/${Job}.mpileup
 
@@ -71,7 +75,7 @@ bedtools intersect -v -header -a ${Out}/${Job}_results/${Job}_vcf/${Job}_mutserv
 -b ${blacklist} > ${Out}/${Job}_report/mito/${Job}_mutserve_filtered.vcf
 
 
-#Annotation for haplogroup
+#Annotation for haplogroups and detection of contamination based on haplogroups
 
 ${haplocheck_path}/haplocheck --out ${Out}/${Job}_report/${Job}_contamination.txt \
 ${Out}/${Job}_results/${Job}_vcf/${Job}_mutserve.vcf

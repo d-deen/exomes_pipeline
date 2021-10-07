@@ -1,16 +1,19 @@
 #! /bin/bash
 #SBATCH -A rtmngs
 #SBATCH -p bigmem
-#SBATCH --mem=250G
+#SBATCH --mem=80G
 #SBATCH -c 8
 
 
 Out=$1
 Job=$2
 
+
+##Module loading
 module load Java/11.0.2
 module load picard/2.2.4-intel-2017.03-GCC-6.3-Java-1.8.0_144
 
+##Setting constants for variant calling:
 gatk_path='/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/programs_DD/gatk-4.1.9.0'
 
 fasta_ref="/nobackup/proj/rtmngs/Mt_Exome_pipeline/DD/genomes_DD/GCA_000001405.15_GRCh38_no_alt/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"
@@ -22,7 +25,8 @@ bwa_folder=${Out}/${Job}_results/${Job}_bam
 rm ${bwa_folder}/*_output.bam*
 
 
-##Combinign gVCFs into a single vcf and calling variants
+##Combinign gVCFs into a single vcf and calling variants:
+
 #Getting a list of gVCF files
 ls -d ${Out}/${Job}_results/${Job}_vcf/*.g.vcf.gz | awk '{print "--variant" OFS $0}'  > ${Out}/${Job}_results/${Job}_vcf/gvcf_list.txt
 
@@ -30,7 +34,7 @@ gvcf_list=${Out}/${Job}_results/${Job}_vcf/gvcf_list.txt
 
 
 
-#Checking how many samples are there: if more than onem then combine them in a file, if one - rename it in a cohort. 
+#Checking how many samples are there: if more than one, then combine them in a file, if one - rename it with a cohort. 
 
 if test "$(cat $gvcf_list | wc -l)" -gt 1 ; then
     echo "proceed to combining the files"
@@ -49,7 +53,7 @@ fi
 
 #Calling genotypes
 
-${gatk_path}/gatk --java-options "-Xmx40g" GenotypeGVCFs \
+${gatk_path}/gatk --java-options "-Xmx80g" GenotypeGVCFs \
    -R ${fasta_ref} \
    -V ${Out}/${Job}_results/${Job}_vcf/${Job}_cohort.g.vcf.gz \
    -O ${Out}/${Job}_results/${Job}_vcf/${Job}_cohort.vcf.gz 
@@ -101,10 +105,10 @@ java -jar $EBROOTPICARD/picard.jar MergeVcfs \
 
 ##Normalisation of the variants
 
-#Loading modules separately as there were conflicts when loading them alltogether
+#Loading bcftools module separately as there were conflicts when loading them all together
 module load BCFtools/1.10.2-foss-2019b
 
-bcftools norm -m - ${Out}/${Job}_results/${Job}_vcf/${Job}_filtered_comb_cohort.vcf.gz > ${Out}/${Job}_report/${Job}_filtered_cohort.vcf.gz
+bcftools norm -m - -Oz ${Out}/${Job}_results/${Job}_vcf/${Job}_filtered_comb_cohort.vcf.gz > ${Out}/${Job}_report/${Job}_filtered_cohort.vcf.gz
 
 
 ##This is the filtering that was done before April 2021 (selecting the variants with at least 30 reads)
@@ -116,12 +120,12 @@ bcftools norm -m - ${Out}/${Job}_results/${Job}_vcf/${Job}_filtered_comb_cohort.
 module load texlive/20200406-GCCcore-10.2.0
 bcftools stats -s - ${Out}/${Job}_report/${Job}_filtered_cohort.vcf.gz > ${Out}/${Job}_report/${Job}_vcf_stats.vchk
 
-#Creating pdf report generates errors - uncommented.
+#Creating pdf report generates errors 
 #plot-vcfstats -p ${Out}/${Job}_report/${Job}_vcf_stats -s -T $Job ${Out}/${Job}_report/${Job}_vcf_stats.vchk
 
 
 
-##Creating the separate pivoted vcf files (pivoting: unique varaint calls)
+##Creating the separate pivoted vcf files (pivoting: unique varaint calls for the cohort)
 
 #Separating the combined vcf to separate samples, to get unique variant calls:
 if test "$(cat $gvcf_list | wc -l)" -gt 1 ; then
