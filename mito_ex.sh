@@ -1,7 +1,7 @@
 #! /bin/bash
 #SBATCH -A rtmngs
 #SBATCH -p bigmem
-#SBATCH --mem=250G
+#SBATCH --mem=80G
 #SBATCH -c 4
 
 
